@@ -1,5 +1,15 @@
+import QuoteForm from "../components/quotes/QuoteForm";
+import { useNavigate } from "react-router-dom";
+
 const NewQuote = () => {
-  return <h1>New Quote Page</h1>;
+  const navigate = useNavigate();
+
+  const addQuoteHandler = (quoteData) => {
+    console.dir(quoteData);
+    navigate("/quotes");
+  };
+
+  return <QuoteForm onAddQuote={addQuoteHandler} />;
 };
 
 export default NewQuote;
