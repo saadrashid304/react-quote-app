@@ -5,6 +5,7 @@ import NewQuote from "./pages/NewQuote";
 import Comments from "./components/comments/Comments";
 import Layout from "./components/layout/Layout";
 import NotFound from "./pages/NotFound";
+import LoadComment from "./components/comments/LoadComment";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/quotes" />} />
         <Route path="/quotes" element={<AllQuotes />} />
         <Route path="/quotes/:quoteId/" element={<QuoteDetail />}>
+          <Route path="" element={<LoadComment />} />
           <Route path="comments" element={<Comments />} />
         </Route>
         <Route path="/new-quote" element={<NewQuote />} />

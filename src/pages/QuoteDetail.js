@@ -1,31 +1,46 @@
 import { useParams, Outlet } from "react-router-dom";
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
+import useHttp from "../hooks/use-http";
+import { getSingleQuote } from "../lib/api";
+import { useEffect } from "react";
+import LoadingSpinner from "../components/UI/LoadingSpinner";
 
-const DUMMY_QUOTES = [
-  {
-    id: "q1",
-    author: "Saad",
-    text: "Learning React is fun!",
-  },
-  {
-    id: "q2",
-    author: "Fahad",
-    text: "Learning React is great!",
-  },
-];
+// useRouteMatch
+// instead of the string, we can provide object includes pathname and search field for the route
 
 const QuoteDetail = () => {
   const param = useParams();
+  const { quoteId } = param;
+  const {
+    sendRequest,
+    status,
+    data: loadedQuote,
+    error,
+  } = useHttp(getSingleQuote, true);
 
-  const quote = DUMMY_QUOTES.find((quote) => quote.id === param.quoteId);
+  useEffect(() => {
+    sendRequest(quoteId);
+  }, [sendRequest, quoteId]);
 
-  if (!quote) {
-    return <p>No Quote Found!</p>;
+  if (status === "pending") {
+    return (
+      <div className="centered">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="centered focused">{error}</p>;
+  }
+
+  if (!loadedQuote.text) {
+    return <p className="centered">No Quote Found!</p>;
   }
 
   return (
     <section>
-      <HighlightedQuote author={quote.author} text={quote.text} />
+      <HighlightedQuote author={loadedQuote.author} text={loadedQuote.text} />
       <Outlet />
     </section>
   );
